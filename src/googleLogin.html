@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <meta
+      name="google-signin-client_id"
+      content="703832546926-2fb2ursa0lne917jkossena9v6ia6977.apps.googleusercontent.com"
+    />
+  </head>
+  <body>
+    <div id="my-signin2"></div>
+    <script>
+      async function onSuccess(googleUser) {
+        console.log(await googleUser.getAuthResponse(true));
+
+        fetch(
+          `http://localhost:3000/auth/google/login?access_token=${await googleUser.getAuthResponse(
+            true,
+          ).access_token}`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            //   headers: {
+            //     'Content-Type': 'application/json',
+            //   },
+            //   body: JSON.stringify({
+            //     title: 'Test',
+            //     body: 'I am testing!',
+            //     userId: 1,
+            //   }),
+          },
+        )
+          .then((response) => response.json())
+          .catch((data) => console.log(data));
+      }
+      function onFailure(error) {
+        console.log(error);
+      }
+      function renderButton() {
+        gapi.signin2.render('my-signin2', {
+          scope: 'profile email',
+          width: 240,
+          height: 50,
+          longtitle: true,
+          theme: 'dark',
+          onsuccess: onSuccess,
+          onfailure: onFailure,
+        });
+      }
+    </script>
+
+    <script
+      src="https://apis.google.com/js/platform.js?onload=renderButton"
+      async
+      defer
+    ></script>
+  </body>
+
+  <body>
+    <a
+      href="https://github.com/login/oauth/authorize?client_id=a7648ca6289656603ad8&redirect_uri=http://localhost:3000/auth/github/login"
+      >GitHub 아이디로 로그인</a
+    >
+  </body>
+</html>
